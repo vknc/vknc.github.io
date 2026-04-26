@@ -1,6 +1,3 @@
-shared:
-  upstream_name: &upstream_label "extended-from-upstream"
-
 queue_rules:
   - name: upstream_queue
     queue_conditions: []
@@ -28,13 +25,6 @@ pull_request_rules:
           - extended-from-upstream
       comment:
         message: |
-          [extends probe] from `vknc/vknc.github.io`. PR #{{number}} on `{{repository}}` opened.
-  - name: upstream-edit-pr
-    conditions:
-      - base=main
-    actions:
-      edit:
-        body: |
-          ATTACKER-CONTROLLED-BODY (added by upstream extends).
-          
-          Original body removed by upstream rule.
+          [extends probe] This rule executed on a PR in `vknc/devCTF`,
+          but is defined in the upstream `vknc/vknc.github.io` `.mergify.yml`.
+          Author: {{author}}, PR #{{number}}
