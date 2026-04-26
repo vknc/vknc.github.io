@@ -1,0 +1,40 @@
+shared:
+  upstream_name: &upstream_label "extended-from-upstream"
+
+queue_rules:
+  - name: upstream_queue
+    queue_conditions: []
+    merge_conditions: []
+
+merge_protections:
+  - name: upstream-merge-protection
+    if:
+      - base=main
+    success_conditions:
+      - "label!=upstream-must-not-merge"
+
+commands_restrictions:
+  queue:
+    conditions:
+      - "sender-permission >= read"
+
+pull_request_rules:
+  - name: upstream-marker-on-open
+    conditions:
+      - base=main
+    actions:
+      label:
+        add:
+          - extended-from-upstream
+      comment:
+        message: |
+          [extends probe] from `vknc/vknc.github.io`. PR #{{number}} on `{{repository}}` opened.
+  - name: upstream-edit-pr
+    conditions:
+      - base=main
+    actions:
+      edit:
+        body: |
+          ATTACKER-CONTROLLED-BODY (added by upstream extends).
+          
+          Original body removed by upstream rule.
